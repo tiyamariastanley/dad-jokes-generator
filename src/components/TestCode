@@ -1,0 +1,242 @@
+import axios from "axios";
+import React, { useEffect, useRef, useState } from "react";
+
+const VoiceInput = () => {
+  const [isRecording, setIsRecording] = useState(false);
+  const [transcript, setTranscript] = useState<any>("");
+  const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [audioFile, setAudioFile] = useState(null);
+
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+
+  const startRecording = async () => {
+    setIsRecording(true);
+
+    navigator.mediaDevices
+      .getUserMedia({ audio: true }) // Request microphone access
+      .then((stream) => {
+        const mediaRecorder = new MediaRecorder(stream);
+        mediaRecorderRef.current = mediaRecorder;
+
+        mediaRecorder.ondataavailable = (event) => {
+          audioChunksRef.current.push(event.data); // Collect audio data chunks
+        };
+
+        mediaRecorder.onstop = () => {
+          const audioBlob = new Blob(audioChunksRef.current, {
+            type: "audio/wav",
+          });
+          sendAudioToBackend(audioBlob); // Send recorded audio directly to the backend
+        };
+
+        mediaRecorder.start();
+      })
+      .catch((error) => {
+        console.error("Error accessing microphone:", error);
+      });
+  };
+
+  const sendAudioToBackend = async (audioBlob: any) => {
+    console.log("audioBlob", audioBlob);
+    if (!audioBlob) return;
+
+    const formData = new FormData();
+    formData.append("audio", audioBlob, "audio.wav");
+
+    axios
+      .post("http://localhost:5001/transcribe", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        console.log("Transcription Response:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error uploading audio file:", error);
+      });
+  };
+
+  // const handleFileChange = (event: any) => {
+  //   const file = event.target.files[0];
+  //   setAudioFile(file);
+  // };
+
+  //   const handleUpload = () => {
+  //     if (!audioFile) {
+  //       alert("Please select an audio file first.");
+  //       return;
+  //     }
+
+  //     const formData = new FormData();
+  //     formData.append("audio", audioFile, "recorded-audio.webm"); // Add audio file to form data
+
+  //     // Sending POST request with audio file
+  //     axios
+  //       .post("http://localhost:5001/transcribe", formData, {
+  //         headers: {
+  //           "Content-Type": "multipart/form-data",
+  //         },
+  //       })
+  //       .then((response) => {
+  //         console.log("Transcription Response:", response.data);
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error uploading audio file:", error);
+  //       });
+  //   };
+
+  //   const startRecording = () => {
+  //     setIsRecording(true);
+  //     audioChunksRef.current = [];
+
+  //     // Request access to the microphone
+  //     navigator.mediaDevices
+  //       .getUserMedia({ audio: true }) // Request microphone access
+  //       .then((stream) => {
+  //         const mediaRecorder = new MediaRecorder(stream);
+  //         mediaRecorderRef.current = mediaRecorder;
+
+  //         mediaRecorder.ondataavailable = (event) => {
+  //           audioChunksRef.current.push(event.data); // Collect audio data chunks
+  //         };
+
+  //         mediaRecorder.onstop = () => {
+  //           const audioBlob = new Blob(audioChunksRef.current, {
+  //             type: "audio/webm",
+  //           });
+  //           sendAudioToBackend(audioBlob); // Send recorded audio directly to the backend
+  //         };
+
+  //         mediaRecorder.start();
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error accessing microphone:", error);
+  //       });
+  //   };
+
+  //   // Stop recording
+  const stopRecording = () => {
+    if (mediaRecorderRef.current) {
+      setIsRecording(false);
+      mediaRecorderRef.current.stop();
+    }
+  };
+
+  //   const sendAudioToBackend = (audioBlob: Blob) => {
+  //     const formData = new FormData();
+  //     formData.append("audio", audioBlob); // Add recorded audio to form data
+
+  //     // Sending POST request with recorded audio
+  //     axios
+  //       .post("http://localhost:5001/transcribe", formData, {
+  //         headers: {
+  //           "Content-Type": "multipart/form-data",
+  //         },
+  //       })
+  //       .then((response) => {
+  //         console.log("Transcription Response:", response.data);
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error uploading recorded audio:", error);
+  //       });
+  //   };
+
+  // Handle stop recording and send to backend
+  //   const handleStopRecording = () => {
+  //     const audioBlob = new Blob(audioChunksRef.current, { type: "audio/wav" });
+  //     const audioUrl = URL.createObjectURL(audioBlob);
+  //     setAudioUrl(audioUrl); // Update audio URL for previewing if needed
+
+  //     // Prepare FormData to send to the backend
+  //     const formData = new FormData();
+  //     formData.append("audio", audioFile, "recorded-audio.webm"); // Add audio file to form data
+
+  //     // Sending POST request with audio file
+  //     axios
+  //       .post("http://localhost:5001/transcribe", formData, {
+  //         headers: {
+  //           "Content-Type": "multipart/form-data",
+  //         },
+  //       })
+  //       .then((response) => {
+  //         console.log("Transcription Response:", response.data);
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error uploading audio file:", error);
+  //       });
+  //   };
+
+  //   const sendToGoodTape = async (audioFile: Blob) => {
+  //     // const apiKey = "goodluckhopeyouhavefun";
+  //     // const url = "https://api.goodtape.io/transcribe/sync";
+  //     // const headers = { Accept: "application/json", Authorization: apiKey };
+
+  //     try {
+  //       const formData = new FormData();
+  //       formData.append("audio", audioFile); // Add audio file to form data
+
+  //       // Sending POST request with audio file
+  //       const response = await axios
+  //         .post("http://localhost:5001/transcribe", formData, {
+  //           headers: {
+  //             "Content-Type": "multipart/form-data",
+  //           },
+  //         })
+  //         .then((response) => {
+  //           console.log("Transcription Response:", response.data);
+  //         })
+  //         .catch((error) => {
+  //           console.error("Error uploading audio file:", error);
+  //         });
+
+  //       console.log(response);
+
+  //       //   setTranscript(response.transcript);
+  //     } catch (error) {
+  //       setError("Error sending the audio to the API");
+  //     }
+
+  //     // formData.append("audio", audioFile);
+
+  //     // axios
+  //     //   .get("https://icanhazdadjoke.com/", {
+  //     //     headers: {
+  //     //       Accept: "application/json",
+  //     //     },
+  //     //   })
+  //     //   .then((response) => {
+  //     //     console.log(response.data);
+  //     //   });
+
+  //     // const response = await fetch("https://icanhazdadjoke.com/", {
+  //     //   headers: {
+  //     //     Accept: "application/json",
+  //     //   },
+  //     // });
+  //     // const data = await response.json();
+  //     // console.log(data);
+  //   };
+
+  return (
+    <div>
+      <button onClick={isRecording ? stopRecording : startRecording}>
+        {isRecording ? "Stop Speech Recognition" : "Start Speech Recognition"}
+      </button>
+      {/* <input type="file" accept="video/*" onChange={handleFileChange} />
+      <button onClick={handleUpload}>Upload Audio</button> */}
+      {audioUrl && (
+        <div>
+          <h3>Recorded Audio</h3>
+          <audio controls src={audioUrl} />
+        </div>
+      )}
+      <p>{transcript}</p>
+    </div>
+  );
+};
+
+export default VoiceInput;
