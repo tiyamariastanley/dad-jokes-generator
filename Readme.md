@@ -1,46 +1,52 @@
-# Getting Started with Create React App
+# **Documentation & Assumptions**
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This section outlines the thought process, design decisions, and assumptions made during the development of the app.
 
-## Available Scripts
+1. **Setup Process:**
 
-In the project directory, you can run:
+- Clone the git repo - it containes both frontend and backend codebase.
+- "npm install" - Installs all necessary packages used in both frontend and backend.
+- "npm start" - Starts both frontend and backend concurrently.
 
-### `npm start`
+2. **Features Implemented:**
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- Built a web app where users can speak a query and get dad jokes in response.
+- Used https://jokeapi.dev/ for Dad jokes API.
+- Implemented voice input using MediaRecorder browser API.
+- Transcribed the voice input to text using the [Good Tape API](https://api.goodtape.io/docs).
+- Designed and implemented a responsive themed UI for the app.
+- Add a feature that allows users to filter jokes by category, search term and number of jokes.
+- Implemented voice output for the jokes using Speech Synthesis API.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+3. **Technology Stack:**
 
-### `npm test`
+React, TypeScript, Node.js, Tailwind CSS, MaterialUI, Speech Synthesis API, Media Recorder, Google Fonts.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+4. **Component Design:**
 
-### `npm run build`
+- Context API: To manage global states.
+- Custom Hooks: To resuse logic for fetching jokes.
+- Responsive Design: Used Tailwind's responsive utilities (md:, lg:).
+- Styling: Used MaterialUI and Tailwind CSS.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+5. **Assumptions:**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- The user has a modern browser that supports the Speech Recognition and Speech Synthesis APIs.
+- Users will have an active internet connection to fetch jokes from the API.
+- The primary use case involves users searching for dad jokes either via voice or using filter search.
+- Error messages and fallback behaviors will guide users effectively.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+6. **Approach:**
 
-### `npm run eject`
+- Designed components modularly to ensure reusability.
+- Integrated with Dad Joke API using REST calls from the frontend.
+- Integrated with the Good Tape API using Node.js in the backend.
+- Implemented error handling for edge cases.
+- Tested across Chrome and Safari browsers to ensure compatibility and responsiveness.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+7. **Future Improvements:**
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+- Implement auto stop recording when user stops speaking.
+- Improve joke filtering functionality.
+- Implement joke fetching based on the user query.
+- Add unit and intergration tests.
