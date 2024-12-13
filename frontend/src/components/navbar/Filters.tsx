@@ -26,9 +26,11 @@ const categories = [
   "Christmas",
 ];
 
-interface FilterProps {}
+interface FilterProps {
+  showNav: boolean;
+}
 
-const Filters: React.FC<FilterProps> = ({}) => {
+const Filters: React.FC<FilterProps> = ({ showNav }) => {
   const [category, setCategory] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [jokeNumber, setJokeNumber] = useState<number>(1);
@@ -74,12 +76,15 @@ const Filters: React.FC<FilterProps> = ({}) => {
   };
 
   return (
-    <div className="mt-[40%] flex flex-col">
+    <div
+      className={`${showNav ? "block" : "hidden"} mt-[40%] flex-col lg:block`}
+    >
       <div className="flex flex-row gap-2 ml-5">
         <FilterAltIcon className=""></FilterAltIcon>
         <p className="text-lg font-semibold">Joke Filters</p>
       </div>
-      <hr className="text-gray-500 w-full mt-3"></hr>
+      <hr className="border border-gray-300 m-3"></hr>
+
       <div className="flex flex-col font-inter font-bold items-center p-2 mt-5">
         <div className="flex flex-col gap-10 w-[90%] p-0">
           <FormControl sx={{ m: 0 }}>

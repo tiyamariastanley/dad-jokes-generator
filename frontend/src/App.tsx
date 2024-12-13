@@ -47,7 +47,7 @@ function App() {
         setJokeAPIUrl,
       }}
     >
-      <div className="flex flex-row w-screen gap-32 p-5 bg-[#f9fafb] font-inter">
+      <div className="flex flex-row w-screen gap-5 md:gap-32 pl-0 bg-[#f9fafb] font-inter md:p-5">
         <NavBar></NavBar>
         <Body></Body>
       </div>

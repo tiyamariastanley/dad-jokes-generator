@@ -92,7 +92,7 @@ const VoiceInput: React.FC<VoiceInputProps> = ({}) => {
 
   return (
     <div
-      className={`w-[60vw] h-44 rounded-lg p-5 flex flex-row items-center bg-white border border-[#155eef] shadow-md shadow-[#c4d4fa] ${
+      className={`w-[60vw] h-fit rounded-lg p-7 flex flex-col gap-5 md:flex-row items-center bg-white border border-[#155eef] shadow-md shadow-[#c4d4fa] ${
         isRecording || loading || transcript
           ? "justify-around"
           : "justify-center"

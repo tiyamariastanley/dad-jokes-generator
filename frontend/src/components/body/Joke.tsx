@@ -55,7 +55,7 @@ const Joke: React.FC<JokeProps> = ({ joke, jokeError }) => {
   };
 
   return (
-    <div className="w-[60vw] h-fit border border-gray-400 rounded-lg px-10 py-5 bg-white shadow-md">
+    <div className="flex flex-col items-center justify-center w-[60vw] h-fit border border-gray-400 rounded-lg px-10 py-5 bg-white shadow-md">
       <Button
         variant="outlined"
         size="medium"
@@ -73,7 +73,6 @@ const Joke: React.FC<JokeProps> = ({ joke, jokeError }) => {
             color: "rgba(0, 0, 0, 0.26)",
             backgroundColor: "rgba(0, 0, 0, 0.12)",
           },
-
           float: "right",
           textTransform: "capitalize",
         }}
