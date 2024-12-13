@@ -2,6 +2,7 @@ import React, { ChangeEvent, useContext, useState } from "react";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import {
   Button,
+  ButtonGroup,
   Checkbox,
   FormControl,
   InputLabel,
@@ -11,6 +12,8 @@ import {
   Select,
   SelectChangeEvent,
   TextField,
+  ToggleButton,
+  ToggleButtonGroup,
 } from "@mui/material";
 import { AppContext } from "../../App";
 import { JOKE_API_URL } from "../../utils/constants";
@@ -59,11 +62,7 @@ const Filters: React.FC<FilterProps> = ({ showNav }) => {
       (searchTerm ? "&contains=" + searchTerm : "") +
       (jokeNumber ? "&amount=" + jokeNumber : "");
 
-    // https://v2.jokeapi.dev/joke/Programming,Miscellaneous?type=single&contains=cat&amount=5
-
-    // https://v2.jokeapi.dev/joke/Any?type=single
-
-    console.log("url", url);
+    console.log("joke api url", url);
 
     setJokeAPIUrl(url);
     clearData();

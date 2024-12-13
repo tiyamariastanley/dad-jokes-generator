@@ -6,7 +6,6 @@ interface NavBarProps {}
 
 const NavBar: React.FC<NavBarProps> = () => {
   const [showNav, setShowNav] = useState<boolean>(false);
-  console.log(showNav);
 
   return (
     <div

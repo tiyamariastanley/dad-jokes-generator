@@ -2,9 +2,9 @@ import { createContext, useState } from "react";
 import "./App.css";
 import NavBar from "./components/navbar";
 import Body from "./components/body";
-import "@fontsource/baloo-2/400.css"; // Regular weight
+import "@fontsource/baloo-2/400.css";
 import "@fontsource/baloo-2/700.css";
-import "@fontsource/roboto/400.css"; // Regular weight for Roboto
+import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/700.css";
 import "@fontsource/inter/400.css";
 

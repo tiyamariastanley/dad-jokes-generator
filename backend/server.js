@@ -2,15 +2,18 @@ const express = require("express");
 const axios = require("axios");
 const multer = require("multer");
 const formData = require("form-data");
+const cors = require("cors");
 
 require("dotenv").config();
+
 const app = express();
+app.use(cors()); // Allow requests from all origins for dev mode
+
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 app.post("/transcribe", upload.single("audio"), async (req, res) => {
   try {
-    // const audioFile = req.file.buffer; // The audio file in the request body
     console.log("audioFile", req.file.buffer, process.env.API_KEY);
 
     const form = new formData();
@@ -21,16 +24,15 @@ app.post("/transcribe", upload.single("audio"), async (req, res) => {
       Authorization: process.env.API_KEY,
     };
 
-    // Send the request to the Good Tape API
     const response = await axios.post(
       "https://api.goodtape.io/transcribe/sync",
       form,
       { headers }
     );
 
-    console.log("response", response.data);
+    console.log("transcribed data", response.data);
 
-    const transcription = response.data.text; // Assuming response has 'transcription' field
+    const transcription = response.data.text;
 
     res.status(200).send({ transcription });
   } catch (error) {

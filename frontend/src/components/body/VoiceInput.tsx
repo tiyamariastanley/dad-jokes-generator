@@ -4,6 +4,8 @@ import MicIcon from "@mui/icons-material/Mic";
 import { Bars, ThreeDots } from "react-loader-spinner";
 import { AppContext } from "../../App";
 import { JOKE_API_URL, TRANSCRIBE_API_URL } from "../../utils/constants";
+import { Tooltip } from "@mui/material";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 interface VoiceInputProps {}
 
@@ -25,7 +27,7 @@ const VoiceInput: React.FC<VoiceInputProps> = ({}) => {
 
   const handleStartRecording = async () => {
     try {
-      //TODO: Auto stop recording when user pauses
+      //TODO: Auto stop recording when user stops speaking
 
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const mediaRecorder = new MediaRecorder(stream, {
@@ -86,7 +88,7 @@ const VoiceInput: React.FC<VoiceInputProps> = ({}) => {
 
       setAudioTranscript(data.data.transcription);
     } catch (error) {
-      console.error("Error uploading audio:", error);
+      console.error("Error sending audio:", error);
     }
   };
 
@@ -113,7 +115,12 @@ const VoiceInput: React.FC<VoiceInputProps> = ({}) => {
             className={`text-red-600 ${isRecording ? "text-white" : ""}`}
           ></MicIcon>
         </div>
-        <p className="">{isRecording ? "Listening..." : "Speak a query"}</p>
+        <div className="flex flex-row gap-2 items-center">
+          <p className="">{isRecording ? "Listening..." : "Speak a query"} </p>
+          <Tooltip title="Click the mic to start/ stop listening">
+            <InfoOutlinedIcon className="!text-[1rem]" />
+          </Tooltip>
+        </div>
       </div>
       <div>
         {isRecording ? (
