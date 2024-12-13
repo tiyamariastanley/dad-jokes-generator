@@ -19,7 +19,7 @@ This section outlines the thought process, design decisions, and assumptions mad
 	- Implemented voice input using MediaRecorder browser API.
 	- Transcribed the voice input to text using the [Good Tape API](https://api.goodtape.io/docs).
 	- Designed and implemented a responsive themed UI for the app.
-	- Add a feature that allows users to filter jokes by category, search term and number of jokes.
+	- Added a feature that allows users to filter jokes by category, search term and number of jokes.
 	- Implemented voice output for the jokes using Speech Synthesis API.
 
 3. **Technology Stack:**
