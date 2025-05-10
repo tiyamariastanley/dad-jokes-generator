@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useContext, useState } from "react";
+import React, { ChangeEvent, useContext, useEffect, useState } from "react";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import {
   Button,
@@ -37,7 +37,13 @@ const Filters: React.FC<FilterProps> = ({ showNav }) => {
   const [category, setCategory] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [jokeNumber, setJokeNumber] = useState<number>(1);
-  const { setJokeAPIUrl } = useContext(AppContext)!;
+  const { setJokeAPIUrl, joke, jokeError } = useContext(AppContext)!;
+
+  // useEffect(() => {
+  //   if (!isEmpty(joke) || jokeError) {
+  //     clearData();
+  //   }
+  // }, [joke, jokeError]);
 
   const handleSelectChange = (event: SelectChangeEvent<typeof category>) => {
     const {
@@ -54,7 +60,7 @@ const Filters: React.FC<FilterProps> = ({ showNav }) => {
     setJokeNumber(Number(event.target.value));
   };
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     const url =
       JOKE_API_URL +
       (!isEmpty(category) ? category : "Any") +
@@ -64,7 +70,8 @@ const Filters: React.FC<FilterProps> = ({ showNav }) => {
 
     console.log("joke api url", url);
 
-    setJokeAPIUrl(url);
+    await setJokeAPIUrl(url);
+
     clearData();
   };
 

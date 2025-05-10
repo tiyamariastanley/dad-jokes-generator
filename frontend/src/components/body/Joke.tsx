@@ -23,13 +23,14 @@ const Joke: React.FC<JokeProps> = ({ joke, jokeError }) => {
   }, [joke]);
 
   const speakJoke = (joke: any) => {
+    if (window.speechSynthesis.speaking) return;
     if ("speechSynthesis" in window) {
       setAudio(true);
       let utterance: any = null;
       joke.forEach((item: any) => {
         utterance = new SpeechSynthesisUtterance(item.joke);
         utterance.lang = "en-US";
-        utterance.pitch = 1;
+        utterance.pitch = 0.1;
         utterance.rate = 1;
         setSpeakInstance(utterance);
         window.speechSynthesis.speak(utterance);

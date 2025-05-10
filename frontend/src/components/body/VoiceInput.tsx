@@ -15,9 +15,9 @@ const VoiceInput: React.FC<VoiceInputProps> = ({}) => {
   const { setJokeAPIUrl, transcript, setAudioTranscript } =
     useContext(AppContext)!;
 
+  const silenceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
-
   useEffect(() => {
     if (transcript) {
       setLoading(false);
@@ -27,12 +27,37 @@ const VoiceInput: React.FC<VoiceInputProps> = ({}) => {
 
   const handleStartRecording = async () => {
     try {
-      //TODO: Auto stop recording when user stops speaking
-
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const mediaRecorder = new MediaRecorder(stream, {
         mimeType: "audio/mp4",
       });
+
+      //Auto stop recording when user stops speaking
+
+      const audioContext = new AudioContext();
+      const source = audioContext.createMediaStreamSource(stream);
+      const processor = audioContext.createScriptProcessor(2048, 1, 1);
+
+      processor.onaudioprocess = (event) => {
+        const input = event.inputBuffer.getChannelData(0);
+        const isSilent = input.every((sample) => Math.abs(sample) < 0.01);
+
+        if (isSilent) {
+          if (!silenceTimeoutRef.current) {
+            silenceTimeoutRef.current = setTimeout(() => {
+              handleStopRecording();
+            }, 1000); // Stop recording after 1 second of silence
+          }
+        } else {
+          if (silenceTimeoutRef.current) {
+            clearTimeout(silenceTimeoutRef.current);
+            silenceTimeoutRef.current = null;
+          }
+        }
+      };
+
+      source.connect(processor);
+      processor.connect(audioContext.destination);
 
       mediaRecorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
@@ -52,7 +77,7 @@ const VoiceInput: React.FC<VoiceInputProps> = ({}) => {
         audioChunksRef.current = [];
       };
 
-      mediaRecorder.start();
+      mediaRecorder.start(200);
       mediaRecorderRef.current = mediaRecorder;
       setIsRecording(true);
       setLoading(true);

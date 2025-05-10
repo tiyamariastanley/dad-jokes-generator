@@ -23,9 +23,7 @@ const Body: React.FC<BodyProps> = ({}) => {
 
         <VoiceInput />
       </div>
-      {(transcript || joke || jokeError) && (
-        <Joke joke={joke} jokeError={jokeError} />
-      )}
+      {(joke || jokeError) && <Joke joke={joke} jokeError={jokeError} />}
     </div>
   );
 };
