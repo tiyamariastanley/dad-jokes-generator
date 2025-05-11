@@ -1,4 +1,4 @@
-# **Documentation & Assumptions**
+# **Documentation
 
 
 1. **Setup Process:**
